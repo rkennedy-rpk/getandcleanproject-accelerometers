@@ -1,22 +1,26 @@
 library(here)
 library(tidyverse)
 
+zipURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+temp <- tempfile()
+list <- list()
 download.file(zipURL, temp)
 filenames <- unzip(temp, list = T)
 filenames <- filter(filenames, Length > 0)
-filenames <- filenames$Name
+list <- filenames$Name
 
-list_of_file <- filenames %>% 
+
+list_of_file <- list %>% 
         map(function (path){
                 read_table(temp, path)
         })
-#master <- 
+master <- 
         list_of_file %>% 
-        map(as_data_frame) %>%  
+        map(as_tibble) %>%                  #I returned this to tibble as I found that that wasn't the issue
         #bind_rows(.id = "id")
         list2env(test2, envir = .GlobalEnv) #adds contents of list to global environment
                                             #currently not workings as names(list_of_file) = NULL                
-        
+unlink(temp)        
         
         
 test <- read_table(temp)
