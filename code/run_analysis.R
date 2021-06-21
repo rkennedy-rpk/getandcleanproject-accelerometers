@@ -45,19 +45,18 @@ colnames(Sfull) <- c("subject", "group")
 
 #merge into single dataset
 Full <- bind_cols(Xfull, Yfull, Sfull)
-str(FullT)
+
 FullT <- tibble::as_tibble(Full)
 rm(Full)
 
 #confirm column names are unique
 
-FullT <- janitor::clean_names(FullT)
-any(duplicated(names(FullT)))
 
 valid_column_names <- make.names(names=names(FullT), unique=TRUE, allow_ = TRUE)
 names(FullT) <- valid_column_names
 
 #extract only "mean" or "standard deviation" variables
+
 FullTextract <- FullT %>%
         select(group, subject, activity, contains(".mean."), contains(".std.")) %>% 
         mutate(activity = factor(activity, labels = activitylabels$V2)) %>% 
